@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS mimiciv_derived.first_day_weight; CREATE TABLE mimiciv_deri
 SELECT
   ie.subject_id,
   ie.stay_id,
+  ie.hadm_id,
   AVG(CASE WHEN weight_type = 'admit' THEN ce.weight ELSE NULL END) AS weight_admit,
   AVG(ce.weight) AS weight,
   MIN(ce.weight) AS weight_min,
@@ -15,4 +16,5 @@ LEFT JOIN mimiciv_derived.weight_durations AS ce
   AND /* we filter to weights documented during or before the 1st day */ ce.starttime <= ie.intime + INTERVAL '1 DAY'
 GROUP BY
   ie.subject_id,
-  ie.stay_id
+  ie.stay_id,
+  ie.hadm_id
